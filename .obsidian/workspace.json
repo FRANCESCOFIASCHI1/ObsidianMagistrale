@@ -24,17 +24,17 @@
             }
           },
           {
-            "id": "7967aa8b17952ad9",
+            "id": "eb519985ab961b05",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "split-diff-view",
               "state": {
-                "file": "dscscs.md",
-                "mode": "source",
-                "source": false
+                "aFile": "dscscs.md",
+                "bFile": "dscscs.md",
+                "aRef": ""
               },
-              "icon": "lucide-file",
-              "title": "dscscs"
+              "icon": "diff",
+              "title": "Diff: dscscs"
             }
           }
         ],
@@ -137,6 +137,16 @@
             }
           },
           {
+            "id": "533d393dc4afc386",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
+          },
+          {
             "id": "c43fb323bea79885",
             "type": "leaf",
             "state": {
@@ -206,7 +216,8 @@
               "title": "Reminders"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       },
       {
         "id": "f56563024cecce3e",
@@ -227,8 +238,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -247,18 +257,19 @@
       "obsidian-importer:Open Importer": false,
       "digitalgarden:Digital Garden Publication Center": false,
       "github-sync:Sync with Remote": false,
-      "terminal:Open terminal": false
+      "terminal:Open terminal": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7967aa8b17952ad9",
+  "active": "eb519985ab961b05",
   "lastOpenFiles": [
-    "IR/Appunti.md",
+    "Apple reminders.md",
     "dscscs.md",
+    "IR/Appunti.md",
     "output/attachment/b6d145f3c04b2f627c67093d7cdf5e9c.m4a",
     "output/Appunti.md",
     "output/attachment/attachment.md",
     "Artificial Intelligence/🔥 Schema Slide.md",
-    "Apple reminders.md",
     "📊 Media Voti.md",
     "output/output.md",
     "output/attachment",
