@@ -1,0 +1,12 @@
+{
+  "things-style@@h1-color": "#D51F1F",
+  "things-style@@h3-color": "#328900",
+  "things-style@@h2-underline": false,
+  "things-style@@h2-color": "#388BFF",
+  "things-style@@strong-color": "#FF82B2",
+  "things-style@@em-color": "#FF82B2",
+  "things-style@@quote-color": "#3EB4BF",
+  "things-style@@code-normal": "#BEC6CF",
+  "things-style@@default-font-color": false,
+  "floating-toc-styles@@floating-toc-line-height": 0
+}

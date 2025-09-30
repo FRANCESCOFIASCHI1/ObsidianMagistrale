@@ -1,0 +1,48 @@
+{
+  "cascadeColors": true,
+  "colorBackground": true,
+  "palette": [
+    {
+      "id": "FzPv1Wk-pXTvQD2ecwBMO",
+      "name": "Done",
+      "value": "#64cd47"
+    },
+    {
+      "id": "AkFSU_z-Pd-CPOICLhj_J",
+      "name": "In Progress",
+      "value": "#5978f3"
+    },
+    {
+      "id": "F_TlrxwN58qWeNyRCbzgc",
+      "name": "Not Start",
+      "value": "#c9b0b0"
+    },
+    {
+      "id": "LZI8HoaVGKTAD2ACSBtak",
+      "name": "IMP",
+      "value": "#ff3d3d"
+    }
+  ],
+  "fileColors": [
+    {
+      "path": "Artificial Intelligence",
+      "color": "AkFSU_z-Pd-CPOICLhj_J"
+    },
+    {
+      "path": "Machine Learning",
+      "color": "AkFSU_z-Pd-CPOICLhj_J"
+    },
+    {
+      "path": "Home Page.md",
+      "color": "LZI8HoaVGKTAD2ACSBtak"
+    },
+    {
+      "path": "Apple reminders.md",
+      "color": "F_TlrxwN58qWeNyRCbzgc"
+    },
+    {
+      "path": "IR",
+      "color": "AkFSU_z-Pd-CPOICLhj_J"
+    }
+  ]
+}

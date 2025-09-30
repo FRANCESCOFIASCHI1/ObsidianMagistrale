@@ -1,0 +1,11 @@
+{
+  "types": {
+    "aliases": "aliases",
+    "cssclasses": "multitext",
+    "tags": "tags",
+    "CFU": "number",
+    "Voto": "number",
+    "Calendar": "date",
+    "data": "date"
+  }
+}
