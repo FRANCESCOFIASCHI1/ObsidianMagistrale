@@ -24,17 +24,17 @@
             }
           },
           {
-            "id": "eb519985ab961b05",
+            "id": "d9288fdd77954da5",
             "type": "leaf",
             "state": {
-              "type": "split-diff-view",
+              "type": "markdown",
               "state": {
-                "aFile": "dscscs.md",
-                "bFile": "dscscs.md",
-                "aRef": ""
+                "file": "📊 Media Voti.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "diff",
-              "title": "Diff: dscscs"
+              "icon": "lucide-file",
+              "title": "📊 Media Voti"
             }
           }
         ],
@@ -128,12 +128,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "📊 Media Voti.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Struttura"
+              "title": "Struttura di 📊 Media Voti"
             }
           },
           {
@@ -261,8 +262,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "eb519985ab961b05",
+  "active": "d9288fdd77954da5",
   "lastOpenFiles": [
+    "SIUM.md",
+    "Home Page.md",
     "Apple reminders.md",
     "dscscs.md",
     "IR/Appunti.md",
@@ -279,7 +282,6 @@
     "allegati/image-3.png",
     "allegati/image-2.png",
     "allegati/image-1.png",
-    "Home Page.md",
     "recording-1759236972505.wav",
     "recording-1759237000755.wav",
     "recording-1759236782690.wav",
@@ -301,7 +303,6 @@
     "Triennale/3°Anno/BasiDati/BasiDati.md",
     "Triennale/3°Anno/Allegati/Allegati.md",
     "Triennale/3°Anno/3°Anno.md",
-    "Triennale/Triennale.md",
     "Triennale/3°Anno/Reti&Lab3/TabellaEserciziLab.loom",
     "Triennale/3°Anno/Reti&Lab3/3 Esercizi",
     "Triennale/3°Anno/IngDelSoftware/Studente.svg",
