@@ -1,6 +1,8 @@
 ---
 tags:
   - base
+dg-home: "true"
+dg-publish: "true"
 ---
 # 1 Folder
 ```dataview

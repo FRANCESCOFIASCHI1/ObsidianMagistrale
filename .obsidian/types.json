@@ -6,6 +6,8 @@
     "CFU": "number",
     "Voto": "number",
     "Calendar": "date",
-    "data": "date"
+    "data": "date",
+    "dg-home": "checkbox",
+    "dg-publish": "checkbox"
   }
 }

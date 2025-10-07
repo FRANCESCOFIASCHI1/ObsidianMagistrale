@@ -1,6 +1,7 @@
 ---
 tags:
   - appunti
+dg-publish: true
 ---
 
 # 1 📝Appunti Lezioni

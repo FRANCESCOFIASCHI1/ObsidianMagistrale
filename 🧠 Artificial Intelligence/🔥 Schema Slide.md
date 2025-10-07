@@ -2,6 +2,7 @@
 aliases:
 tags:
   - schema
+dg-publish: true
 ---
 # 1 Agents
 
@@ -22,7 +23,6 @@ Dove:
 ![[allegati/Image.png|711x394]]
 
 + *The First Agent*
-
     semplice senza valutare nessun tipo di valutazione, completa l'obbiettivo senza considerare il tempo o i cicli. Non considera i cambiamenti intermedi
 
 ```cpp

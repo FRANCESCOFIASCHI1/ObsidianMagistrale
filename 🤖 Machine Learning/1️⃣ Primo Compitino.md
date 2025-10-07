@@ -1,16 +1,17 @@
 ---
 tags:
   - schema
+dg-publish: true
 ---
 
-# Primo Compitino
+# 1 Primo Compitino
 
 > ML studia e propone metodi per costruire funzioni dai dati reali osservati che sono in grado di:
 
 - **fit** → essere coerente con gli esempi
 - **generalize** → ossia generalizzare su dati nuovi in modo che abbiano una ragionevole accuratezza
 
-### 0.1.1 Dati
+### 1.1.1 Dati
 
 - **Flat** → vettori di proprietà di dimensione fissata, singola tabella di tuple
     - **Attributi**
@@ -29,7 +30,7 @@ Come vediamo in questo tabella abbiamo:
 - $(x_p)$ → è la riga corrispondente al $p$-esimo pattern
 - $(x_{p,i})$ → è l'attributo $i$ del pattern $p$
 
-### 0.1.2 Task
+### 1.1.2 Task
 
 - **Predire** → classificazione e regressione → approssimazione di funzioni
 - **Desrivere** → cluster analysis, association rules → trova un sotto insieme da dati non classificati
@@ -83,13 +84,13 @@ Combina esempi etichettati e non per generare una funzione appropriata o un clas
     - Robust modeling methods
 - Feature Selection → piccolo numeri di caratteristiche informative che rappresentano una buona rappresentazione del problema
 
-### 0.1.3 Learning Algorithms
+### 1.1.3 Learning Algorithms
 
 Basandosi sui dati, le task e i modelli cerchiamo all'interno dello spazio delle ipotesi \(H\) la migliore ipotesi, ossia l'approssimazione migliore per la funzione target sconosciuta cercando di minimizzare l'errore.
 
 - I parametri liberi del modello sono adattati al compito da svolgere, migliori sono i \(w\) nel modello lineare meglio saranno le regole per il modello simbolico
 
-## 0.2 Loss Function
+## 1.2 Loss Function
 
 La loss misura quanto sto sbagliando, sono diverso dall'etichetta $d$ ossia quella con cui è stato etichettato il dato in input $x$
 
@@ -103,7 +104,7 @@ La loss misura quanto sto sbagliando, sono diverso dall'etichetta $d$ ossia quel
 
 > $L()$ è il cuore della Loss → a seconda del problema, si sceglie una loss diversa
 
-### 0.2.1 Regression
+### 1.2.1 Regression
 
 > Consiste nel trovare i \(w_i\) per cui l’errore è minimizzato → sul training set con \(l\) esempi
 
@@ -123,7 +124,7 @@ $$
 
 **Least Square** → non è per tutti i valori
 
-### 0.2.2 Classificazione
+### 1.2.2 Classificazione
 
 - **Output** → \(\{0,1\}\)
 - **H** → un set di funzioni dell'indicatore
@@ -133,7 +134,7 @@ $$
 
 La media del set di dati restituisce il numero/percentuale di classificazioni errate
 
-## 0.3 Bias Induttivo
+## 1.3 Bias Induttivo
 
 - **Bias di Linguaggio →** è dovuto alla scelta di H come insieme di funzioni lineari (non permettendo di risolvere problemi non-lineari)
     - Nota: questo bias si può attenuare tramite la linear basis expansion permettendo modelli non-lineari rispetto alle variabili di input. Resta una assunzione di linearità sui \(w\)
@@ -153,15 +154,15 @@ La media del set di dati restituisce il numero/percentuale di classificazioni er
 
 > Senza inductive bias non possiamo generalizzare, dato che non possiamo estrarre nessuna regola di associazione dai dati. Bisogna trovare un bias adatto che non restringa troppo e quindi tagli soluzioni.
 
-## 0.4 Clustering and Vector Quantificazione
+## 1.4 Clustering and Vector Quantificazione
 
 - Pagina 58
 
-### 0.4.1 Stima della Densità
+### 1.4.1 Stima della Densità
 
 - Pagina 59
 
-## 0.5 Generalizzazione
+## 1.5 Generalizzazione
 
 - **Learning Phase** → per costruire il modello
 - **Prediction Phase** → valutare la funzione di apprendimento su nuovi dati → capacità di generalizzazione
@@ -179,7 +180,7 @@ La media del set di dati restituisce il numero/percentuale di classificazioni er
 > $E_{RMS}\sqrt{2E(w^*)/-l}$
 > Dove \(E(w^*)\) è l'errore del modello di training
 
-## 0.6 SLT - Statistical Learning Theory
+## 1.6 SLT - Statistical Learning Theory
 
 > Loss Function - Cost Function
 
@@ -208,7 +209,7 @@ La media del set di dati restituisce il numero/percentuale di classificazioni er
 - Modello troppo semplice, basso VC-dim → causa un alto \(R_{emp}\) → **Underfitting**
 - Alto VC-dim fissato \(l\) → basso errore empirico-\(R_{emp}\) ma VC-confidence e quindi e \(R\) aumentano → **Overfitting**
 
-## 0.7 Validation
+## 1.7 Validation
 
 > **Model Selection** → stima le performance dei diversi modelli di apprendimento per scegliere il meglio, ossia quello con più capacità di generalizzare
 
@@ -220,7 +221,7 @@ La media del set di dati restituisce il numero/percentuale di classificazioni er
 
 > Ritorna un Stima
 
-### 0.7.1 Hold Out Cross Validation
+### 1.7.1 Hold Out Cross Validation
 
 Dividiamo il set \(D\) in: Training Set-\(TR\), Validation or Selection Set-\(VL\) e Test Set-\(TS\)
 
@@ -243,7 +244,7 @@ Facciamo il training sull'insiemi \(D\backslash D_i\) e lo testiamo su \(D_i\
 
 *Usiamo tutti i dati per il training e validation o testing*
 
-### 0.7.2 Accuratezza Classificatore
+### 1.7.2 Accuratezza Classificatore
 
 **Specificity** → \(TN/(FP+TN)\) dove True Negative Rate \(=1-FPR\)
 

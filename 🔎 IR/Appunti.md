@@ -1,3 +1,9 @@
+---
+tags:
+  - appunti
+dg-publish: true
+---
+
 # 1 Inverted Index
 30-09-2025
 
