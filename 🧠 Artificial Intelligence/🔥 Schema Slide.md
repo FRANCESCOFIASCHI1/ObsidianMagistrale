@@ -533,6 +533,7 @@ Conditional Plan -> la solzuione è un albero (if-then-else chain) non una seque
 Non deterministic action
 - Se lo stato corrente è sporco, "suck" pulisce il quadrato corrispondente ma avvolte pulisce anche il quadrato adiacente
 - Se lo stato corrente è pulito, "suck" può depositare la sporcizia
+
 "Left" e "Right" sono deterministiche
 
 **Belief state**
@@ -593,8 +594,420 @@ Le azioni possono portare informazioni su possibili stati futuri
 - Nonostante queste ottimizzazioni, la ricerca nei problemi conformant (cioè senza osservazioni, dove l’agente non sa esattamente dove si trova) rimane molto costosa, perché lo spazio dei belief state è enorme.
 ###### Ricerca incrementale nei belief state
 1. Trova una soluzione che funziona per il **primo stato** in B.
-
 2. Controlla se quella soluzione funziona anche per gli altri stati in B.
     - Se sì → fermati.
     - Se no → riprova.
 3. **Fallire velocemente** (cioè accorgersi presto se una soluzione non funziona) può migliorare la velocità di convergenza
+# 4 CSP - Problema di Soddisfazione del Vincolo
+> **C**onstraint **S**atisfaction  **P**roblem
+
+Introduciamo la rappresentazione degli stati come rappresentazione fattoriale
+- Stato -> $X=\{X_1,\ X_2,\ ...,\ X_n\}$ con $n$ variabili
+- Dominio -> $X_i\in D_i$ 
+- La **conoscenza del dominio** è espressa con un set di **vincoli C**
+	- Es. $X_1\le 0,\ \ X_2\in [1,3], ...$ 
+
+
+> [!info] $CSP(X, D, C)$
+> **Goal Test** -> Assegno valori alle variabili per soddisfare i vincoli
+> - **Completo vs Assegnazione Parziale** -> tutte o solo una parte delle variabili hanno un valore assegnato
+> - **Assegnamento Consistente** -> Assegnare variabili soddisfa le condizioni
+> - **Soluzione Parziale** -> un assegnamento parziale che è consistente
+> 
+> Obbiettivo CSP è trovare una soluzione completa e consistente
+
+
+> [!important]  Factored Representation
+> State Rappresentation -> Qui rappresenti **ogni stato possibile come un’unica entità indivisibile** (un “punto” nello spazio degli stati).
+>  
+> Factored Representation -> Qui invece **uno stato non è rappresentato come un singolo nodo “piatto”**, ma come **una tupla di valori di variabili**:
+> $$\text{Stato }S=(X_1​=v_1​,\ X_2​=v_2​,\ …,\ X_n​=v_n​)$$
+> Quindi:
+> - Invece di rappresentare **esplicitamente tutti gli stati**,
+> - **rappresenti le variabili e i vincoli** che definiscono implicitamente lo spazio degli stati.
+
+
+### 4.1.1 Esempio - Map Coloring
+*Obbiettivo* -> colorare gli stati adiacenti con un colore diverso
+![[image-9.png|274x226]]
+Quindi abbiamo:
+- $X = \{WA,\ NT,\ SA,\ Q,\ NSW,\ V,\ T\}$
+- $D ={r,\ g,\ b}\ \ \forall𝑋_𝑖$
+- $C =$
+	- $WA ≠ 𝑁𝑇$
+	- $𝑊𝐴,\ 𝑁𝑇 ∈ { 𝑟,\ 𝑔 ,\ 𝑟,\ 𝑏 ,\ 𝑔,\ 𝑟 ,\ 𝑔,\ 𝑏,\ … }$
+	- Entrambi -> ripetere per ogni coppia di stati
+
+![[image-10.png|274x242]]
+> Le variabili sono i nodi e gli archi sono i vincoli
+> Il grafico aiuta la ricerca, come possiamo vedere dal nodo "Tasmania" che non ha vincoli quindi possiamo assegnarli un colore casuale
+
+| **Dominio**                    | **Vincoli**    | **Risolvibilità**                                         |
+| ------------------------------ | -------------- | --------------------------------------------------------- |
+| Discreto finito                | Qualsiasi      | Decidibile (es. backtracking, CSP classici)               |
+| Discreto infinito              | Lineari o meno | Difficile → servono metodi speciali o bounds              |
+| Discreto + vincoli lineari     | Lineari        | Solvibile (anche se NP-hard)                              |
+| Discreto + vincoli non lineari | Non lineari    | **Indecidibile in generale**                              |
+| Continuo + vincoli lineari     | Lineari        | **Solvibile in modo efficiente** (programmazione lineare) |
+| Continuo + vincoli non lineari | Non lineari    | Più complesso; decidibilità dipende dal tipo di vincolo   |
+## 4.2 Tipi di Vincoli
+- **Unitario**
+	- Una variabile coinvolta -> $A\ne 1$
+- **Binario**
+	- Due variabili coinvolte -> $A\le B$
+- **Globale** -> vincoli con $n$ variabili coinvolte
+	- Non necessariamente tutte le variabili
+	- Alldif$(A,\ B,\ C,\ D)$
+- **Vincoli di Preferenza**
+	- Vincoli leggeri che rappresentano le preferenze
+	- Modellato con un costo associato a ciascun incarico -> problema di ottimizzazione vincolato
+	- Es. Linear Model
+
+### 4.2.1 Vincoli Hyper-Graph
+Non posso rappresentare i vincoli come archi dato che per definizione gli archi connettono solo due nodi
+![[image-11.png]]
+- **Nodi:** I cerchi (variabili lettera: F,T,U,W,R,O) e i quadrati (variabili di riporto: C1​,C2​,C3​).
+- **Archi:** Le linee che collegano i nodi rappresentano le relazioni o i vincoli tra le variabili definite dalle equazioni.
+
+> Per vincoli con dominio finito, puoi sempre ridurre un hyper-graph in un grafico normale
+> - vincoli globali possono essere divisi in un set di vincoli binari
+
+Qualche vincolo popolare (es. Alldiff) gode di algoritmi studiati appositamente
+- Non serve ridurre il grafo a vincoli binari
+- Sono più facili da leggere da una prospettiva umana
+
+## 4.3 Come Cercare in CSP
+**Gli stati sono definiti dai valori assegnati finora**
+*Initial State - stato iniziale:*
+- Assegnazione vuota -> $\{\}$
+- Fattore di ramificazione alla radice -> $=nd$
+
+*Azioni:*
+- Assegna un valore alle variabili non assegnate che non causa un conflitto con l'assegnamento corrente
+- Fattore di ramificazione al secondo livello -> $=(n-1)d$
+
+*Ogni soluzione completa appare alla profondità $n$:*
+- Problema -> $n!$ o $d^n$ foglie ([[#^6f1c56|Riduce Complessità]])
+- Risoluzione -> Sfrutta la struttura del problema 
+
+*Assegnamenti illegali* -> ritornano fallimento - non risolvibile
+*Goal Test* -> controlla se l'assegnamento attuale è completo
+
+### 4.3.1 Backtracking Search
+
+> Fissa un ordine tra gli stati -> rimuove la complessità $n!$
+> Ossia -> Non c’è bisogno di considerare tutti gli ordini delle variabili: possiamo **fissare a priori un unico ordine**, e assegnare le variabili sempre in quell’ordine.
+
+
+> [!attention] Assegnazione Stati vs Singolo Nodo
+> Se tu considerassi **ogni stato come una possibile sequenza parziale di assegnamenti senza un ordine fisso tra le variabili**, allora:
+> - Devi esplorare **tutte le possibili permutazioni delle variabili**
+> - Ci sono $n!$ possibili ordini diversi in cui potresti assegnarle.
+> 
+> Invece di avere **ogni nodo come “una configurazione intera” di n variabili**, ogni nodo nella ricerca corrisponde a **“assegnare un valore a una singola variabile”**, secondo l’ordine prefissato. ^6f1c56
+
+**Ogni nodo è considerato un singolo assegnamento** -> non l'intero stato
+- solamente $d^n$ foglie 
+- Costruisco un albero con ogni nodo che è un assegnazione di una singola variabile non di un assegnazione di più variabili
+
+Algoritmo non informato per CSP
+- Depth-first co assegnamento a variabile singola
+- La soluzione è ancora un cammino nell'albero
+
+
+> [!seealso] Logica Algoritmo
+> Sceglie ripetutamente una variabile non assegnata, e poi prova tutti i valori nel dominio di quella variabile a turno, cercando di estendere ciascuno in una soluzione tramite una chiamata ricorsiva. Se la chiamata ha successo, la soluzione viene restituita e, se fallisce, l'assegnazione viene ripristinata allo stato precedente e proviamo il valore successivo. Se nessun valore funziona, restituiamo il fallimento.
+
+![[image-12.png|536x438]]
+- Con stati atomici, gli algoritmi non informati non sfruttano l'euristica
+- Nella rappresentazione fattorizzata esistono euristiche indipendenti dal dominio
+	- Possono migliorare la velocità di ricerca
+
+## 4.4 Miglioramenti 
+- [[#4.4.2 Miglioramenti Tramite Inferenza|4.4.2 Miglioramenti Tramite Inferenza]]
+### 4.4.1 Miglioramenti di Ricerca
+- [[#MEVs - Minimum Remaining Values|MEVs - Minimum Remaining Values]]
+- [[#Degree Heuristic - Gradi di Euristica|Degree Heuristic - Gradi di Euristica]]
+- [[#Least-Constraint Values|Least-Constraint Values]]
+
+#### MEVs - Minimum Remaining Values
+> Scegli la variabile con meno valori legali -> utilizza quella per avere un approccio "**prima fallimenti**" così da fare una specie di **pruning** sui nodi con meno speranze così da eliminarli subito
+
+#### Degree Heuristic - Gradi di Euristica
+>La **degree heuristic** sceglie, tra le variabili non ancora assegnate, **quella che è coinvolta nel maggior numero di vincoli con altre variabili non assegnate**, così da massimizzare la riduzione futura del branching.  
+>Serve spesso come **criterio di spareggio** quando più variabili hanno lo stesso numero di valori legali (dopo la MRV).
+
+#### Least-Constraint Values
+> Questa è la descrizione dell’**euristica LCV (Least Constraining Value)** 👨‍🏫
+> - **Idea**: quando scegli il valore per una variabile, assegna **quello che elimina il minor numero di valori possibili per le altre variabili ancora non assegnate**, così da **lasciare più libertà futura**.
+> - **Differenza con MRV**:
+> 	- **MRV (Minimum Remaining Values)** sceglie _quale variabile_ assegnare → cerca di fallire presto per potare l’albero.
+> 	- **LCV (Least Constraining Value)** sceglie _quale valore_ assegnare → cerca di **non restringere troppo** il resto del problema, per non imboccare precocemente un vicolo cieco.
+> 
+> 👉 Entrambe accelerano la ricerca, ma **da prospettive opposte**: MRV anticipa i fallimenti, LCV mantiene aperte le possibilità.
+
+![[image-13.png]]
+
+### 4.4.2 Miglioramenti Tramite Inferenza
+- [[#Forward checking|Forward checking]]
+- [[#Arc Consistency|Arc Consistency]]
+
+#### Forward checking
+Assegna un valore a $X$  
+Per ogni vincolo tra $X$ e $Y$:  
+→ **elimina** dal dominio di $Y$ tutti i valori che violano il vincolo con $X$.  
+Se il dominio di Y rimane vuoto → **backtrack!**
+- Significa che l’assegnamento precedente era errato.
+- Esistono molte strategie di backtracking
+
+👉 Questo è un esempio di **inferenza nei CSP**:
+- Non si fa ricerca, si **riduce lo spazio delle possibili assegnazioni**.
+- L’inferenza può essere eseguita **prima** e **durante** la ricerca.
+	- Ad esempio, **prima della ricerca** si può imporre la **coerenza di stato** eliminando i valori di dominio che violano vincoli **unari**.
+
+![[image-14.png]]
+
+#### Arc Consistency
+**coerenza d’arco**
+- Una **variabile X è arc-consistent** rispetto a un’altra variabile $Y$ se:  
+$$\forall x \in \text{dom}(X), \ \exists y \in \text{dom}(Y) \ \text{tale che} \ (x,y) \ \text{rispetta il vincolo tra X e Y}.$$
+
+👉 In altre parole: **ogni valore nel dominio di X deve avere almeno un valore compatibile nel dominio di Y**.   
+- Un **grafo è arc-consistent** se **tutte le variabili sono arc-consistent rispetto a tutte le altre** (cioè per ogni arco X→Y vale la condizione sopra).
+
+> [!tip] Grafo Arc-Consistency
+> - **Per ogni valore possibile di $X$**, deve esserci **almeno un valore compatibile in $Y$**.
+> - Se esiste un valore $x$ che non ha nessun $y$ compatibile, allora quel $x$ va eliminato dal dominio di $X$.
+> 
+> Quando elimini un valore xx dal **dominio di una variabile X** tramite AC-3 o altra inferenza
+> - Stai **riducendo lo spazio di ricerca**, perché quell’assegnamento **non verrà mai esplorato** durante il backtracking.
+> - Questo **non elimina variabili**, elimina solo possibili valori per ciascuna variabile.
+
+##### ⚙️ Come rendere un grafo arc-consistent: algoritmo AC-3
+L’algoritmo **AC-3** è un procedimento di inferenza che **rende il CSP arc-consistente**, oppure segnala fallimento se qualche dominio si svuota.
+
+**Passi principali:**
+1. **Inizializza una coda** con tutti gli archi (X → Y) del CSP.
+2. **Ripeti finché ci sono cambiamenti**:
+    - Estrai un arco X → Y dalla coda.
+    - **Rendi X arc-consistent rispetto a Y**:
+        - Elimina dal dominio di X tutti i valori x per cui **non esiste nessun y nel dominio di Y compatibile**con x.
+    - Se il dominio di X è stato modificato
+        - Aggiungi alla coda **tutti gli archi K → X**, cioè quelli che puntano verso X, perché il cambiamento potrebbe renderli incoerenti.
+    - Se il dominio di una variabile si svuota → **fallimento** (il CSP non ha soluzione).
+##### ⏱️ Complessità
+Per un CSP con:
+-  **c** = numero di archi binari
+- **d** = dimensione massima dei domini
+👉 La complessità è **O(c · d³)**
+
+- **Ogni arco** può essere controllato in **O(d²)** (perché bisogna confrontare ogni valore di X con ogni valore di Y).
+- Ogni arco può essere reinserito nella coda al massimo **d volte**, perché ogni variabile può perdere al massimo d valori → da qui **O(c · d³)**.
+
+##### 📝 Riassunto finale
+- **Arc-consistency** = ogni valore di ogni variabile ha un supporto compatibile nei vicini.
+- **AC-3** = algoritmo di inferenza che:
+    - non fa ricerca,
+    - riduce i domini eliminando valori impossibili,
+    - può essere eseguito prima o durante la ricerca per potare fortemente lo spazio
+- Se dopo AC-3 qualche dominio è vuoto → **il CSP non è risolvibile**.
+
+#### Maintaining Arc Consistency
+MAC (Maintaining Arc-Consistency) **estende il Forward Checking** chiamando AC-3 dopo ogni assegnamento durante la ricerca.
+- Dato un assegnamento a ($X$), si chiama AC-3 con una coda contenente tutti gli archi ($Y \to X$), per tutte le variabili ($Y$) ancora non assegnate.
+- Se AC-3 fallisce → **backtrack**.
+
+MAC **potatura più aggressiva rispetto al Forward Checking**, perché verifica ricorsivamente eventuali incoerenze.
+
+## 4.5 Local Search for CSP
+Formulazione a **stato completo**: ogni stato assegna un valore a **tutte le variabili**.
+- La ricerca cambia il valore di **una variabile alla volta**.
+    - Quindi, lo stato iniziale è un **assegnamento casuale di tutte le variabili**.
+
+**Euristica Min-Conflicts**: scegli il valore che **violerebbe il minor numero di vincoli**, così da avvicinarti alla soluzione.
+- È possibile **pesare diversamente i vincoli** per dare priorità a quelli più importanti,
+    - perché la soluzione finale potrebbe non essere ottimale rispetto a tutti i vincoli.
+### 4.5.1 Min-Conflict Heuristic
+**Euristica Min-Conflicts**: scegli il valore che **violerebbe il minor numero di vincoli**.
+- Funziona molto bene, **tranne in una regione critica**.
+    - Ad esempio, risolve il problema delle **N-queens** in un numero di passi quasi costante, indipendentemente da $N$ (circa 50 passi).
+### 4.5.2 Sfruttiamo la Struttura del Problema
+Anche avendo **un arsenale di milioni di trucchi** (e ce ne sono molti altri!), i **CSP rimangono comunque molto difficili in generale**.
+- Caso peggiore: ( $d^n$ ) foglie nell’albero di ricerca (come abbiamo visto).
+#### Scomposizione in sottoproblemi indipendenti
+- Alcuni problemi possono essere **divisi in sottoproblemi indipendenti**, ad esempio “T” e “mainland”.
+- Gli **algoritmi sui grafi** possono identificare queste **sottostrutture nel grafo dei vincoli**, come le **componenti connesse**.
+- Le **componenti connesse** sono indipendenti tra loro, quindi la **soluzione complessiva** del CSP è semplicemente **l’unione delle soluzioni di ciascuna componente**.
+#### ⚡ Vantaggio computazionale
+
+- Se una componente ha $c < n$ variabili, allora la ricerca su quella componente scala come $d^c$ , invece di $d^n$.
+- In altre parole, **scomporre il problema in sottoproblemi riduce drasticamente la complessità**, sfruttando l’indipendenza tra le variabili.
+
+### 4.5.3 Tree-structured CSPs
+Se il **grafo dei vincoli è un albero**, risolvere il CSP costa $O(n d^2)$
+- Lineare in $n!$
+
+Dato un **grafo dei vincoli senza cicli** (un albero), l’algoritmo di ricerca procede così:
+1. **Ordinamento topologico**: scegli una qualsiasi variabile come radice e ordina le variabili in modo che ciascuna sia figlia della propria variabile genitore.
+2. **Rendi l’albero arc-consistente**; se fallisce → termina con fallimento.
+    - Ci sono ( n-1 ) archi e ( d^2 ) combinazioni di valori da controllare per ciascun arco.
+3. **Assegna a ogni nodo** un qualsiasi valore consistente con quello del genitore; se non esiste → fallimento
+
+> In questo caso **non serve mai fare backtracking**.
+
+![[image-15.png]]
+
+### 4.5.4 🌳 “Piantare alberi dove non ce ne sono”
+
+- Possiamo risolvere **rapidamente CSP strutturati ad albero**.
+- Ma cosa succede se il CSP **non è un albero**? Possiamo provare a **forzarlo a diventarlo**.
+#### Procedura per trasformare un CSP in albero
+1. **Assegna un valore a una variabile** (scegli un nodo).
+2. **Rendi gli archi coerenti** (arc-consistency).
+3. **Rimuovi la variabile assegnata**
+
+- Se il grafo risultante **può essere trasformato in un albero**, allora puoi **verificare rapidamente se il CSP è risolvibile**.
+- Altrimenti, puoi provare **un altro valore per la variabile** o **scegliere un altro nodo da assegnare**.
+#### ⚡ Cutset Conditioning
+
+- Supponiamo di dover provare ( c ) variabili (il **cutset**), cioè quelle che “rompono i cicli” del grafo
+- Complessità approssimativa:  
+$$
+    O(d^c (n-c) d^2)  
+$$
+- Qui:
+    - $d^c$ = tutte le combinazioni di valori per le variabili nel cutset
+    - $n-c$ = numero di variabili rimanenti che ora formano un albero
+    - $d^2$ = costo per verificare la coerenza sugli archi rimanenti
+
+- In pratica, riduce drasticamente il problema, perché **la parte ciclica viene gestita separatamente**, mentre il resto è un albero → risolvibile in tempo lineare.
+![[image-16.png]]
+## 4.6 Riassunto
+
+### 4.6.1 I. Fondamenti dei Constraint Satisfaction Problems (CSP)
+
+#### 5.1.1 Definizione e Struttura dello Stato
+
+- **Stato Fattorizzato:** Lo stato $X$ è rappresentato da un insieme di $n$ variabili ${X_1, X_2, \dots, X_n}$.
+- **Dominio ($D_i$):** Ogni variabile $X_i$ assume valori da un dominio $D_i$.
+- **Vincoli ($C$):** La conoscenza del dominio è espressa da un insieme di vincoli che devono essere soddisfatti (es. $X_1 \le 0$, $X_2 \in {1, 3}$).
+- **Obiettivo del CSP:** Trovare una **soluzione completa e consistente**.
+    - **Assegnazione Completa:** Tutte le variabili hanno un valore assegnato.
+    - **Assegnazione Parziale:** Solo alcune variabili hanno un valore assegnato.
+    - **Assegnazione Consistente:** Le variabili assegnate soddisfano i vincoli.
+    - **Soluzione Parziale:** Un'assegnazione parziale che è consistente.
+
+#### 4.5.2 Rappresentazione dei Vincoli
+
+- **Grafo dei Vincoli:** Le variabili sono rappresentate come **nodi** e i vincoli sono rappresentati come **archi**. La struttura del grafo può aiutare la ricerca.
+- **Vincoli Comuni:**
+    - **Vincoli Unari:** Coinvolgono una sola variabile (es. $A \ne 1$).
+    - **Vincoli Binari:** Coinvolgono due variabili (es. $A \le B$).
+    - **Vincoli Globali:** Coinvolgono un numero qualsiasi di variabili (non necessariamente tutte), es. $Alldiff(A, B, C, D)$.
+- **Iper-Grafo dei Vincoli:** Necessario quando ci sono vincoli globali, poiché un arco per definizione connette solo due nodi.
+    - **Riduzione:** Per i vincoli con dominio finito, un iper-grafo può sempre essere ridotto a un grafo normale suddividendo i vincoli globali in un insieme di vincoli binari. Questo è utile se si vogliono usare algoritmi per soli vincoli binari.
+- **Vincoli di Preferenza (Soft Constraints):** Rappresentano una preferenza (es. se possibile, assegna questo rispetto a quello). Sono modellati tramite un costo associato a ciascuna assegnazione (diventando un problema di ottimizzazione vincolata).
+
+### 4.6.2 II. Tecniche di Ricerca di Soluzioni
+- [[#A. Framework di Ricerca (Stato Fattorizzato)|A. Framework di Ricerca (Stato Fattorizzato)]]
+- [[#B. Ricerca Non Informata: Backtracking Search|B. Ricerca Non Informata: Backtracking Search]]
+- [[#C. Miglioramenti tramite Euristiche (Domain-Independent)|C. Miglioramenti tramite Euristiche (Domain-Independent)]]
+- [[#D. Ricerca Locale (Local Search)|D. Ricerca Locale (Local Search)]]
+#### A. Framework di Ricerca (Stato Fattorizzato)
+
+- **Stati:** Definiti dai valori assegnati finora.
+- **Stato Iniziale:** L'assegnazione vuota ${\ }$.
+- **Azioni:** Assegnare un valore a una variabile non assegnata che non è in conflitto con l'assegnazione corrente.
+- **Profondità della Soluzione:** Ogni soluzione completa appare alla profondità $n$.
+- **Problema di Complessità:** Il numero di foglie (senza ottimizzazioni) è $n! d^n$.
+
+#### B. Ricerca Non Informata: Backtracking Search
+
+- **Algoritmo:** Backtracking Search è essenzialmente una ricerca in profondità (Depth-First Search) con assegnazione a variabile singola.
+- **Fissare l'Ordine:** Fissando un ordine per le variabili si elimina la complessità $n!$, riducendo il numero di foglie a $d^n$.
+- **Processo:** Sceglie ripetutamente una variabile non assegnata, prova tutti i valori nel suo dominio, ed estende ricorsivamente l'assegnazione. Se la chiamata fallisce, l'assegnazione viene ripristinata e si prova il valore successivo. Se nessun valore funziona, restituisce fallimento.
+
+#### C. Miglioramenti tramite Euristiche (Domain-Independent)
+
+Nello stato fattorizzato esistono euristiche indipendenti dal dominio che velocizzano la ricerca.
+
+- **1. Minimum Remaining Values (MRVs):**
+    
+    - **Scelta:** Scegliere la variabile con il **minor numero di valori legali** (possibili).
+    - **Logica:** Cerca il fallimento il prima possibile (_Failure-First_) in modo che la potatura (_pruning_) avvenga prima.
+- **2. Degree Heuristic:**
+    
+    - **Scelta:** Scegliere la variabile con il **maggior numero di vincoli** tra le variabili ancora da assegnare.
+    - **Uso:** Serve come _tie-breaker_ per variabili con lo stesso numero di mosse legali (stesso MRV).
+- **3. Least-Constraining Values (LCVs):**
+    
+    - **Scelta:** Scegliere un valore che escluda il **minor numero di valori** nelle altre variabili ancora da assegnare.
+    - **Logica:** Mantiene aperte le opzioni, cercando di evitare percorsi stretti che potrebbero essere sbagliati.
+
+#### D. Ricerca Locale (Local Search)
+
+- **Formulazione a Stato Completo:** Ogni stato assegna un valore a _ogni_ variabile.
+- **Inizio:** Lo stato iniziale è un'assegnazione casuale di tutte le variabili.
+- **Azione:** La ricerca cambia il valore di una sola variabile alla volta.
+- **Heuristica Min-Conflicts:**
+    - **Scelta:** Scegliere il valore che **rompe il minor numero di vincoli**.
+    - **Obiettivo:** Avvicina lo stato alla soluzione.
+    - **Efficacia:** Funziona molto bene; ad esempio, risolve il problema delle N-regine in un numero costante di passi, indipendentemente da $N$.
+
+### 4.6.3 III. Tecniche di Inferenza e Propagazione dei Vincoli
+
+L'inferenza non è una ricerca, ma riduce lo spazio di possibili assegnazioni. Può essere eseguita prima o durante la ricerca.
+
+#### Forward Checking (FC)
+
+- **Funzionamento:** Dopo aver assegnato un valore a una variabile $X$, per ogni vincolo $X-Y$, si **eliminano i valori dal dominio di $Y$** che violano il vincolo.
+- **Azione in caso di fallimento:** Se non rimangono valori in un dominio, si esegue il _backtrack_, poiché l'assegnazione precedente era sbagliata.
+
+#### Arc Consistency (AC)
+
+- **Definizione:** Una variabile $X$ è **arc-consistent** se per ogni arco $X \to Y$, per ogni valore $x$ nel dominio di $X$, esiste almeno un valore $y$ nel dominio di $Y$ che è permesso.
+- **Grafo Arc-Consistent:** Un grafo è arc-consistent se tutte le variabili sono arc-consistent.
+
+#### Algoritmo AC-3
+
+- **Scopo:** Rende un grafo arc-consistent o restituisce fallimento.
+- **Processo:**
+    1. Creare una coda con tutti gli archi.
+    2. Ripetere finché non ci sono più cambiamenti:
+        - Selezionare un arco casuale $X \to Y$ e rendere $X$ arc-consistent, **riducendo il dominio di $X$**.
+        - Se viene rimosso un valore da $X$, **aggiungere tutti gli archi $K \to X$ alla coda** (perché $K$ potrebbe non essere più consistente rispetto al nuovo $X$).
+        - Se una variabile rimane senza assegnazioni possibili, fallire.
+- **Complessità:** $O(cd^3)$, dove $c$ è il numero di archi binari e $d$ è la dimensione del dominio.
+
+#### Maintaining Arc Consistency (MAC)
+
+- **Funzionamento:** MAC aumenta il _forward checking_ chiamando AC-3 dopo ogni assegnazione durante la ricerca.
+- **Invocazione:** Data un'assegnazione a $X$, MAC chiama AC-3 con una coda di archi $Y \to X$ (per tutte le $Y$ non ancora assegnate).
+- **Potatura:** MAC pota più del _forward checking_ perché verifica ricorsivamente le incoerenze.
+
+### 4.6.4 IV. Sfruttare la Struttura del Problema (Semplificazione)
+
+Anche con molte euristiche, i CSP rimangono difficili in generale (worst-case $d^n$). Sfruttare la struttura può portare a grandi semplificazioni.
+
+#### Componenti Connesse Indipendenti
+
+- **Identificazione:** Gli algoritmi sui grafi possono identificare sottostrutture (componenti connesse) nel grafo dei vincoli.
+- **Vantaggio:** I componenti connesse sono sottoproblemi indipendenti.
+- **Soluzione:** La soluzione è l'unione delle soluzioni dei componenti.
+- **Scalabilità:** La complessità scala come $d^c$, dove $c < n$ sono le variabili coinvolte nel sottoproblema.
+
+#### CSPs a Struttura ad Albero (Tree-Structured CSPs)
+
+- **Definizione:** Se il grafo dei vincoli è un albero (senza cicli), il CSP è notevolmente più facile.
+- **Costo:** La risoluzione costa $O(nd^2)$, che è **lineare** in $n$ (numero di variabili).
+- **Algoritmo (Nessun Backtrack):**
+    1. **Ordinamento Topologico:** Scegliere una variabile come radice e ordinare le variabili in modo che ciascuna sia figlia del suo genitore.
+    2. **Arc-Consistency:** Rendere l'albero arc-consistent (o fallire).
+    3. **Assegnazione:** Assegnare a ogni nodo un valore consistente con il suo genitore (o fallire).
+
+#### Cutset Conditioning (Piantare alberi dove non ci sono)
+
+- **Scopo:** Forzare un CSP a diventare strutturato ad albero.
+- **Processo:** Si assegna un valore a un sottoinsieme di variabili, chiamato **cutset** ($c$ variabili).
+- **Vantaggio:** Se il grafo risultante (dopo aver rimosso e assegnato il cutset) può essere trasformato in un albero, si può verificare rapidamente se è risolvibile.
+- **Complessità:** $O(d^c (n-c) d^2)$. L'efficacia dipende dalla dimensione $c$ del _cutset_.

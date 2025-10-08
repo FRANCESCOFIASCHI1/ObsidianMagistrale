@@ -1,5 +1,0 @@
-
-```apple-reminders
-list: Università
-```
-

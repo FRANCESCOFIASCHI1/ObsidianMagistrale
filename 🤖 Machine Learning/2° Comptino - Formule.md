@@ -1,3 +1,7 @@
+---
+Score: 6
+---
+
 # 1 Loss Function
 La funzione di loss misura la differenza tra l'output della funzione approsimata e l'output target. Tramite questa misurazione possiamo capire quanto stiamo sbagliando e muoverci tramite il negativo del gradiente verso il minimo locale.
 

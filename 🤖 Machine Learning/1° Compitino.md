@@ -2,6 +2,7 @@
 tags:
   - schema
 dg-publish: true
+Score: 9
 ---
 
 # 1 Primo Compitino
